@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Korece"><meta name="theme-color" content="#eaeefc"><link rel="apple-touch-icon" id="ati">
+<title>Korece – Ders 5-9</title>
+<style>
+:root{--bg:#f5f5f9;--card:#fff;--ink:#1d1d24;--mute:#6b6b7b;--ac:#6a5cff;--ac2:#3b82f6;--line:#e4e4ee}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px -apple-system,BlinkMacSystemFont,"Helvetica Neue","Apple SD Gothic Neo",sans-serif;-webkit-text-size-adjust:100%}
+body{padding:20px 16px 40px;transition:padding-bottom .2s}
+body.kb-on{padding-bottom:340px}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:30px;margin:8px 0}h2{font-size:21px;margin:0 0 10px}
+.card{background:var(--card);border-radius:22px;padding:20px;margin:16px 0;box-shadow:0 4px 18px rgba(40,30,90,.07)}
+.mute{color:var(--mute);font-size:14px;line-height:1.5}
+button{font:inherit;border:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px}
+.ch{background:#f0f0fa;border-radius:16px;padding:10px 4px;text-align:center}
+.ch b{font-size:30px;display:block;font-weight:600}.ch i{font-size:12px;color:var(--mute);font-style:normal;display:block}.ch u{font-size:12px;color:var(--ac);text-decoration:none;display:block}
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.w{background:#f0f0fa;border-radius:16px;padding:12px}.w b{font-size:28px}.w div{font-size:13px;color:var(--mute)}
+.wa{min-height:64px;font-size:34px;padding:12px 16px;border:2px solid var(--line);border-radius:16px;background:#fff;outline:0;cursor:text;-webkit-user-select:none;user-select:none;word-break:break-all}
+.wa.on{border-color:var(--ac);box-shadow:0 0 0 4px rgba(106,92,255,.15)}
+.wa.on .cr{display:inline-block;width:2px;height:1em;background:var(--ac);vertical-align:-4px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.pr{font-size:13px;color:var(--mute);margin:6px 2px 14px;min-height:18px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:var(--ac);color:#fff;border-radius:14px;padding:12px 18px;font-weight:600;min-height:44px}
+.btn.g{background:#ececf7;color:var(--ink)}
+.seg{display:inline-flex;background:#ececf7;border-radius:14px;padding:3px}.seg button{background:none;padding:10px 14px;border-radius:11px;min-height:44px;color:var(--ink)}.seg button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.15);color:var(--ac);font-weight:600}
+/* keyboard */
+#kb{position:fixed;left:0;right:0;bottom:0;background:rgba(235,235,245,.96);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);padding:8px 8px calc(10px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .25s;z-index:50;border-radius:18px 18px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.12)}
+#kb.show{transform:none}
+.kbar{display:flex;justify-content:space-between;align-items:center;margin:0 auto 6px;max-width:900px}
+.kr{display:flex;gap:6px;justify-content:center;margin:6px auto;max-width:900px;flex-wrap:nowrap}
+.k{flex:1 1 0;min-width:0;max-width:78px;height:54px;background:#fff;border-radius:11px;box-shadow:0 1px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;-webkit-touch-callout:none}
+.k b{font-size:23px;font-weight:500}.k small{font-size:10px;color:var(--mute)}
+.k:active{background:#d9d9ee}.k.fn{background:#c9c9dc;max-width:110px;font-size:14px}.k.fn.on{background:var(--ac);color:#fff}.k.sp{max-width:360px;flex:4}
+.klab{max-width:900px;margin:2px auto;font-size:11px;color:var(--mute);font-weight:600;letter-spacing:.5px}
+/* drawer */
+#tab{position:fixed;right:0;top:35%;writing-mode:vertical-rl;background:linear-gradient(180deg,var(--ac),var(--ac2));color:#fff;padding:16px 12px;border-radius:14px 0 0 14px;font-weight:700;z-index:40;box-shadow:-2px 2px 12px rgba(0,0,0,.2)}
+#dr{position:fixed;top:0;right:0;bottom:0;width:410px;max-width:94vw;background:#fff;z-index:45;transform:translateX(105%);transition:transform .3s ease;box-shadow:-6px 0 30px rgba(0,0,0,.18);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 360px}
+#dr.open{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.x{background:#ececf7;width:44px;height:44px;border-radius:50%;font-size:20px}
+/* Writing Assist – Korece hece bloğu yerleşimleri */
+.blk{display:grid;gap:7px;width:230px;margin:12px auto}
+.blk.v2{grid-template-columns:1fr 1fr;grid-template-rows:70px;grid-template-areas:"l v"}
+.blk.h2{grid-template-columns:1fr;grid-template-rows:70px 70px;grid-template-areas:"l" "v"}
+.blk.v3{grid-template-columns:1fr 1fr;grid-template-rows:70px 70px;grid-template-areas:"l v" "t t"}
+.blk.h3{grid-template-columns:1fr;grid-template-rows:70px 70px 70px;grid-template-areas:"l" "v" "t"}
+.blk.cv3{grid-template-columns:1fr 1fr;grid-template-rows:52px 52px;grid-template-areas:"l v2" "v v2"}
+.blk.v4{grid-template-columns:1fr 1fr;grid-template-rows:70px 70px;grid-template-areas:"l v" "t u"}
+.blk.h4{grid-template-columns:1fr;grid-template-rows:52px 52px 70px;grid-template-areas:"l" "v" "t u"}
+.blk.cv4{grid-template-columns:1fr 1fr;grid-template-rows:52px 52px 70px;grid-template-areas:"l v2" "v v2" "t t"}
+.sl{grid-area:var(--a);height:auto;min-height:52px;border:2px dashed #b9b9d6;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:30px;background:#fafaff}
+.sl small{font-size:11px;color:var(--mute)}.sl.f{border-style:solid;border-color:var(--ac);background:#efedff}.sl.ov{background:#d9d4ff}
+#pv{font-size:76px;text-align:center;min-height:96px}
+.tray{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:6px}
+.chip{touch-action:none;background:#f0f0fa;border-radius:12px;padding:6px 0;text-align:center;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;cursor:grab}
+.chip b{font-size:24px;display:block;font-weight:500}.chip small{font-size:10px;color:var(--mute)}
+#gh{position:fixed;pointer-events:none;z-index:99;background:var(--ac);color:#fff;border-radius:12px;width:54px;padding:6px 0;text-align:center;font-size:24px;opacity:.9;display:none}
+#msg{font-size:13px;color:#c0392b;min-height:18px;text-align:center}
+#pbox{background:#f0f0fa;border-radius:14px;padding:12px;margin-top:8px;display:none;line-height:1.6}
+
+:root{--ac:#0047a0;--ac2:#cd2e3a;--red:#cd2e3a}
+body{background:#faf6ee radial-gradient(circle at 20px 20px,rgba(0,71,160,.05) 2px,transparent 3px) 0 0/40px 40px}
+.card{border:1px solid #eadfca;box-shadow:0 4px 18px rgba(80,50,20,.08)}
+h2{border-left:5px solid var(--red);padding-left:10px}
+.hd{display:flex;align-items:center;gap:14px}.hd svg{width:64px;height:64px;cursor:pointer;flex:none}.hd svg.spin{animation:sp .8s}
+@keyframes sp{to{transform:rotate(360deg)}}
+.stripe{height:6px;border-radius:3px;margin:8px 0;background:linear-gradient(90deg,#0047a0 0 20%,#fff 0 40%,#111 0 60%,#cd2e3a 0 80%,#f5c400 0 100%);border:1px solid #ddd}
+.opts{position:sticky;top:0;z-index:30;display:flex;gap:20px;justify-content:center;flex-wrap:wrap;background:rgba(250,246,238,.93);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);padding:4px 8px;border-radius:0 0 16px 16px;margin:0 -8px}
+.sw{display:flex;align-items:center;gap:8px;font-size:14px;min-height:44px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw span{width:46px;height:28px;background:#c8c8d0;border-radius:14px;position:relative;transition:.2s;flex:none}
+.sw span::after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw input:checked+span{background:var(--ac)}.sw input:checked+span::after{left:21px}
+body.hr .rom{display:none!important}body.ht .trk{display:none!important}
+[data-say]{cursor:pointer}.ch:active,.w:active{transform:scale(.96)}
+.ch,.w{background:#f4efe3}.ch u,.w .trk{color:var(--red)}
+.wa.on{box-shadow:0 0 0 4px rgba(0,71,160,.15)}.wa.ok{border-color:#2e9e5b;background:#f1fbf4}
+.sl.f{background:#e8f0fb}.sl.ov{background:#cfe0f7}
+.ex{margin:16px 0}.exh{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}.big{font-size:30px}
+#toast{position:fixed;left:50%;top:70px;transform:translateX(-50%) scale(.8);background:var(--red);color:#fff;padding:12px 22px;border-radius:30px;font-weight:700;opacity:0;transition:.25s;z-index:99;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) scale(1)}
+.intro{background:#f4efe3;border-radius:16px;padding:14px;margin-top:12px;line-height:1.7}.intro b{font-size:24px}
+#cty{flex-wrap:wrap;margin:8px 0}
+
+:root{--ac:#4f6bff;--ac2:#a05cff;--red:#ff5c8a;--line:rgba(120,130,190,.25)}
+body{background:#eaeefc}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;filter:blur(30px);background:radial-gradient(40% 35% at 15% 20%,rgba(110,150,255,.6),transparent),radial-gradient(35% 40% at 85% 15%,rgba(255,150,195,.55),transparent),radial-gradient(40% 40% at 70% 85%,rgba(140,235,215,.55),transparent),radial-gradient(35% 35% at 10% 85%,rgba(195,160,255,.55),transparent);animation:dr 16s ease-in-out infinite alternate}
+@keyframes dr{to{transform:translate(4%,3%) scale(1.12) rotate(6deg)}}
+.stripe{display:none}
+.hd svg{filter:drop-shadow(0 6px 14px rgba(79,107,255,.45))}
+h1{background:linear-gradient(90deg,#4f6bff,#a05cff 60%,#ff5c8a);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+h2{border-left:4px solid var(--ac2);border-radius:2px}
+.card,#dr,#kb,.opts{-webkit-backdrop-filter:blur(26px) saturate(170%);backdrop-filter:blur(26px) saturate(170%)}
+.card{background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.75);border-radius:28px;box-shadow:0 10px 36px rgba(50,60,140,.13),inset 0 1px 0 rgba(255,255,255,.9)}
+.opts{background:rgba(255,255,255,.45);border:1px solid rgba(255,255,255,.7);border-radius:0 0 20px 20px}
+.ch,.w,.chip,.intro{background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.85);box-shadow:0 2px 10px rgba(50,60,140,.07)}
+.ch u,.w .trk{color:#7a4dff}
+.btn{background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 6px 16px rgba(110,90,255,.35)}
+.btn.g{background:rgba(255,255,255,.7);color:var(--ink);box-shadow:none;border:1px solid rgba(255,255,255,.9)}
+.seg{background:rgba(120,130,190,.16)}.seg button.on{color:var(--ac)}
+.wa{background:rgba(255,255,255,.72);border:2px solid rgba(255,255,255,.9)}
+.wa.on{border-color:var(--ac);box-shadow:0 0 0 5px rgba(79,107,255,.18)}.wa.ok{border-color:#2e9e5b;background:rgba(235,252,241,.85)}
+#dr{background:rgba(255,255,255,.62);border-left:1px solid rgba(255,255,255,.8);width:450px}
+#kb{background:rgba(240,242,255,.62);border-top:1px solid rgba(255,255,255,.8)}
+.k{background:rgba(255,255,255,.82);box-shadow:0 1px 0 rgba(90,100,160,.35)}.k.fn{background:rgba(190,196,230,.7)}
+#tab{background:linear-gradient(180deg,var(--ac),var(--ac2));box-shadow:-4px 4px 20px rgba(110,90,255,.4)}
+.sl{background:rgba(255,255,255,.6);border-color:rgba(120,130,190,.5)}.sl.f{background:rgba(79,107,255,.14);border-color:var(--ac)}.sl.ov{background:rgba(79,107,255,.28)}
+#toast{background:linear-gradient(135deg,var(--ac),var(--red))}
+.wbt{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;align-items:center}
+.wbt button{min-width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.9);padding:0 10px}
+.wbt .on{outline:3px solid var(--ac)}.wbt .dot{border-radius:50%;min-width:34px;width:34px;height:34px}
+.stage{position:relative;height:300px;border-radius:20px;background:rgba(255,255,255,.9);border:1px solid var(--line);overflow:hidden;margin-top:6px}
+.stage canvas{position:absolute;left:0;top:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+.ghost{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:190px;color:rgba(79,107,255,.14);pointer-events:none;-webkit-user-select:none;user-select:none}
+.stage:not(.gh) .ghost{display:none}
+.stage.g::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(rgba(255,92,138,.35),rgba(255,92,138,.35)) center/1px 100% no-repeat,linear-gradient(rgba(255,92,138,.35),rgba(255,92,138,.35)) center/100% 1px no-repeat;border:1px dashed rgba(255,92,138,.35)}
+
+body{padding-top:calc(20px + env(safe-area-inset-top))}
+#ltab{position:fixed;left:0;top:35%;writing-mode:vertical-rl;background:linear-gradient(180deg,var(--ac2),var(--ac));color:#fff;padding:16px 12px;border-radius:0 14px 14px 0;font-weight:700;z-index:40;box-shadow:4px 4px 20px rgba(110,90,255,.4)}
+#lp{position:fixed;top:0;left:0;bottom:0;width:340px;max-width:90vw;z-index:46;transform:translateX(-105%);transition:transform .3s;overflow-y:auto;padding:calc(16px + env(safe-area-inset-top)) 16px 40px;background:rgba(255,255,255,.62);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border-right:1px solid rgba(255,255,255,.8);box-shadow:6px 0 30px rgba(0,0,0,.15)}#lp.open{transform:none}
+.li{display:block;width:100%;text-align:left;background:rgba(255,255,255,.65);border:1px solid #fff;border-radius:16px;padding:12px;margin:6px 0}.li.on{outline:3px solid var(--ac)}.li b{display:block}.li span{font-size:13px;color:var(--mute)}
+.bar{display:block;height:6px;background:rgba(120,130,190,.2);border-radius:3px;margin-top:8px}.bar u{display:block;height:100%;background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:3px}
+.stat{display:inline-block;width:47%;background:rgba(255,255,255,.6);border-radius:14px;padding:10px;margin:3px}.stat b{font-size:22px;display:block}.stat span{font-size:12px;color:var(--mute)}
+#pop{position:fixed;top:70px;left:50%;transform:translateX(-50%);width:min(92vw,400px);background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(30px);backdrop-filter:blur(30px);border:1px solid #fff;border-radius:28px;box-shadow:0 20px 60px rgba(40,50,140,.3);padding:20px;z-index:60;display:none;text-align:center}#pop.on{display:block}#pop .x{position:absolute;right:10px;top:10px}
+.sy{display:inline-flex;align-items:center;gap:5px}.sy b{font-size:22px}.sy u{text-decoration:none;font-size:18px;color:var(--ac);background:#f1f1f8;border-radius:9px;padding:4px 7px}
+.qs{font-size:84px;text-align:center}.qo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}.qo button{min-height:64px;font-size:24px;border-radius:16px;background:rgba(255,255,255,.75);border:1px solid #fff}.qo .ok{background:#cfeedd}.qo .bad{background:#ffd9df}
+#ws{display:none}#ws h1{color:#000;-webkit-text-fill-color:#000;background:none}.wr{margin:14px 0;page-break-inside:avoid}.bx{display:flex;margin-top:6px}.bx i{width:52px;height:52px;border:1px solid #333;margin-right:-1px;font:normal 34px/52px sans-serif;text-align:center;color:#c4c4c4;background:linear-gradient(#0002,#0002) center/1px 100% no-repeat,linear-gradient(#0002,#0002) center/100% 1px no-repeat}.bx s{width:20px}
+@media print{body>*:not(#ws){display:none!important}#ws{display:block}body{background:#fff;padding:0}body::before{display:none}}
+:root{--t:79,107,255}
+#lesson>.card:nth-child(1){--t:100,116,139}
+#lesson>.card:nth-child(2){--t:79,107,255}
+#lesson>.card:nth-child(3){--t:139,92,246}
+#lesson>.card:nth-child(4){--t:236,72,153}
+#lesson>.card:nth-child(5){--t:245,158,11}
+#lesson>.card:nth-child(6){--t:16,185,129}
+#lesson>.card:nth-child(7){--t:249,115,22}
+#lesson>.card:nth-child(8){--t:20,184,166}
+#lesson>.card:nth-child(9){--t:217,70,239}
+#lesson>.card:nth-child(10){--t:14,165,233}
+#lesson>.card:nth-child(11){--t:239,68,68}
+.card{background:linear-gradient(150deg,rgba(var(--t),.18),rgba(255,255,255,.52) 62%);border-color:rgba(var(--t),.34)}
+.card h2{border-left-color:rgb(var(--t))}.card h3{color:rgb(var(--t))}
+.card .ch,.card .w,.card .intro{background:rgba(var(--t),.12);border-color:rgba(var(--t),.3)}
+.card .ch u,.card .w .trk,.qs{color:rgb(var(--t))}
+.card .btn:not(.g),.ms .btn:not(.g){background:linear-gradient(135deg,rgb(var(--t)),rgba(var(--t),.72));box-shadow:0 6px 16px rgba(var(--t),.35)}
+.card .wa.on,.ms .wa.on{border-color:rgb(var(--t));box-shadow:0 0 0 5px rgba(var(--t),.2)}
+.ms{background:rgba(var(--t),.13);border:1px solid rgba(var(--t),.32);border-radius:22px;padding:6px 14px 14px;margin:16px 0}.ms h3{color:rgb(var(--t))}.ms .seg button.on{color:rgb(var(--t))}
+.k.c{background:rgba(243,238,255,.94)}.k.v{background:rgba(255,236,245,.96)}.k.c small{color:#7c4ddb}.k.v small{color:#d6336c}
+#kb{background:rgba(236,240,255,.68)}#kb.beg{background:rgba(222,247,236,.72)}
+#trC .chip{background:rgba(139,92,246,.14);border:1px solid rgba(139,92,246,.32)}#trV .chip{background:rgba(236,72,153,.13);border:1px solid rgba(236,72,153,.32)}
+.sl[data-s=v]{border-color:rgba(236,72,153,.6)}.sl.f[data-s=v]{background:rgba(236,72,153,.16);border-color:#ec4899}
+.sl[data-s=l],.sl[data-s=t],.sl[data-s=u]{border-color:rgba(139,92,246,.6)}.sl.f[data-s=l],.sl.f[data-s=t],.sl.f[data-s=u]{background:rgba(139,92,246,.16);border-color:#8b5cf6}
+#lp{--t:20,184,166;background:linear-gradient(160deg,rgba(20,184,166,.2),rgba(255,255,255,.66))}
+.li{background:rgba(var(--t),.12);border:1px solid rgba(var(--t),.3)}.li b{color:rgb(var(--t));font-size:18px}.li.on{outline-color:rgb(var(--t))}
+#burger{position:fixed;left:calc(12px + env(safe-area-inset-left));top:calc(10px + env(safe-area-inset-top));width:46px;height:46px;border-radius:50%;z-index:47;font-size:22px;color:#fff;background:linear-gradient(135deg,#14b8a6,#4f6bff);box-shadow:0 6px 18px rgba(20,184,166,.45)}
+.hd{padding-left:52px}
+#pop{background:linear-gradient(160deg,rgba(139,92,246,.22),rgba(255,255,255,.86))}
+.stage{background:#fffdf5}
+#pop{max-height:calc(100vh - 90px);overflow-y:auto}
+#pop{max-height:min(82vh,760px);overflow:hidden;width:min(92vw,430px);padding:0;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.95);border-radius:30px;box-shadow:0 24px 70px rgba(30,40,100,.28);text-align:left}
+#pop.on{display:block}
+#pop .x{z-index:2;right:14px;top:14px;background:rgba(238,238,247,.9);color:var(--ink);width:40px;height:40px;border-radius:50%;font-size:18px}
+#popc{max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px 22px 24px}
+.pop-head{display:flex;align-items:center;gap:16px;padding:2px 42px 18px 2px}.pop-head-simple{padding-left:2px}
+.pop-letter{width:78px;height:78px;flex:0 0 78px;display:flex;align-items:center;justify-content:center;border-radius:22px;background:linear-gradient(145deg,#eef2ff,#f8e9ef);font-size:50px;font-weight:700;color:#111}
+.pop-word{max-width:190px;min-width:0;display:flex;align-items:center;justify-content:center;padding:10px 12px;border-radius:22px;background:linear-gradient(145deg,#eef2ff,#f8e9ef);font-size:clamp(22px,6vw,34px);font-weight:700;line-height:1.15;color:#111;text-align:center;word-break:keep-all;overflow-wrap:anywhere;flex:0 1 auto}
+.pop-title{min-width:0}
+.pop-kicker{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.pop-title h3{margin:0;font-size:22px;line-height:1.2;word-break:break-word}
+.pop-section{margin-top:14px;padding:15px 16px;background:#f7f7fb;border-radius:18px}
+.pop-section-title{font-size:12px;font-weight:700;color:var(--mute);margin-bottom:7px}
+.pop-desc{margin:0;font-size:16px;line-height:1.65;overflow-wrap:anywhere;word-break:normal}
+.pop-syllable{text-align:center;font-size:54px;font-weight:700;margin:2px 0 10px;line-height:1.05}
+.pop-breakdown{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;font-size:20px}
+.pop-breakdown span{padding:7px 10px;background:#fff;border-radius:11px;border:1px solid var(--line)}
+.pop-breakdown b{color:var(--ac);font-weight:700}
+.pop-pron{display:grid;gap:8px}
+.pop-pron-row{display:flex;justify-content:space-between;gap:12px;align-items:baseline;font-size:15px}
+.pop-pron-row span{color:var(--mute)}
+.pop-pron-row strong{font-size:17px;text-align:right;overflow-wrap:anywhere}
+@media(max-width:520px){#pop{top:calc(12px + env(safe-area-inset-top));max-height:calc(100vh - 24px - env(safe-area-inset-top));width:min(94vw,430px)}#popc{max-height:calc(100vh - 24px - env(safe-area-inset-top));padding:22px 17px 20px}.pop-letter{width:68px;height:68px;flex-basis:68px;font-size:44px}.pop-word{max-width:145px;padding:8px 10px;font-size:clamp(20px,6vw,30px)}.pop-title h3{font-size:20px}.pop-desc{font-size:15px}}
+</style></head><body>
+<div class="wrap">
+<div class="hd"><svg id="tg" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="48" fill="#0047a0"/><path d="M2 50A48 48 0 0 1 98 50A24 24 0 0 1 50 50A24 24 0 0 0 2 50Z" fill="#cd2e3a"/></svg><h1 id="ltitle"></h1></div>
+<div class="opts"><label class="sw"><input type="checkbox" id="swTr" checked><span></span>Türkçe okunuş</label><label class="sw"><input type="checkbox" id="swRom"><span></span>Romanizasyon</label></div>
+<p class="mute" id="lsub"></p>
+<main id="lesson"></main>
+</div>
+<aside id="dr"></aside>
+<button id="burger" type="button" aria-label="Dersler">☰</button>
+<aside id="lp"><div class="dh"><h2 style="margin:0">Dersler</h2><button class="x" id="lpx" type="button" aria-label="Kapat">✕</button></div><div id="lpl"></div><a class="li" href="ders1-4.html" style="text-decoration:none;color:inherit"><b>Ders 1-4</b><span>Hangul, okunuş kuralları, sayılar →</span></a></aside>
+<div id="pop"><button class="x" id="popx" type="button" aria-label="Kapat">✕</button><div id="popc"></div></div>
+<script>
+"use strict";
+var LESSONS=[],CUR=null;
+var HC=(function(){var L=[..."ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"],V=[..."ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"],T=[""].concat([..."ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ"]);
+function dec(ch){var c=ch.charCodeAt(0)-0xAC00;if(c<0||c>11171)return null;var t=c%28,v=((c-t)/28)%21,l=Math.floor(c/588);return{l:L[l],v:V[v],t:T[t],li:l,vi:v};}
+return{L:L,V:V,T:T,dec:dec};})();
+var PR=(function(){
+var RI=["g","kk","n","d","tt","r","m","b","pp","s","ss","","j","jj","ch","k","t","p","h"];
+var TI=["g","kk","n","d","tt","r","m","b","pp","s","ss","","c","cc","ç","k","t","p","h"];
+var RV=["a","ae","ya","yae","eo","e","yeo","ye","o","wa","wae","oe","yo","u","wo","we","wi","yu","eu","ui","i"];
+var TV=["a","e","ya","ye","ɔ","e","yɔ","ye","o","wa","we","we","yo","u","wɔ","we","wi","yu","ı","ıy","i"];
+var FT={"ㄱ":"k","ㄲ":"k","ㄳ":"k","ㄴ":"n","ㄵ":"n","ㄶ":"n","ㄷ":"t","ㄹ":"l","ㄺ":"k","ㄻ":"m","ㄼ":"l","ㄽ":"l","ㄾ":"l","ㄿ":"p","ㅀ":"l","ㅁ":"m","ㅂ":"p","ㅄ":"p","ㅅ":"t","ㅆ":"t","ㅇ":"ng","ㅈ":"t","ㅊ":"t","ㅋ":"k","ㅌ":"t","ㅍ":"p","ㅎ":"t"};
+function both(s){var r="",t="";
+[...s].forEach(function(ch){var d=HC.dec(ch);
+ if(d){var li=d.li,vi=d.vi,f=d.t?FT[d.t]:"",ti=TI[li],tv=TV[vi];if((li===9||li===10)&&[2,3,6,7,12,16,17,20].indexOf(vi)>=0){ti=li===9?"ş":"şş";if(tv[0]==="y")tv=tv.slice(1);}r+=RI[li]+RV[vi]+f;t+=ti+tv+f;}
+ else{r+=ch;t+=ch;}});
+return{rom:r,tr:t};}
+return{both:both,RI:RI,TI:TI,RV:RV,TV:TV,FT:FT};})();
+var UI={
+$:function(s,r){return (r||document).querySelector(s);},
+$$:function(s,r){return [].slice.call((r||document).querySelectorAll(s));},
+toast:function(t){var e=UI.$("#toast");if(!e){e=document.createElement("div");e.id="toast";document.body.appendChild(e);}e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove("on");},1600);}
+};
+var PG={mark:function(){}};
+var QZ=(function(){var box,qs,i,sc;
+function sh(a){return a.slice().sort(function(){return Math.random()-.5;});}
+function build(){return sh(CUR.qp).slice(0,10).map(function(p){var o=[p[1]];sh(CUR.qp).forEach(function(x){if(o.length<4&&o.indexOf(x[1])<0)o.push(x[1]);});return{s:p[0],a:p[1],o:sh(o)};});}
+function ask(){if(i>=qs.length){box.innerHTML='<div class="qs">'+sc+'/'+qs.length+'</div><p style="text-align:center">'+(sc>=8?"Harika! 잘했어요 🎉":"Tekrar dene, her seferinde pekişir.")+'</p><button class="btn" data-a="go">🔄 Yeniden</button>';return;}
+ var q=qs[i];box.innerHTML='<p class="mute">Soru '+(i+1)+'/'+qs.length+'</p><div class="qs" lang="ko" style="font-size:40px">'+q.s+'</div><p style="text-align:center">Anlamı ne?</p><div class="qo">'+q.o.map(function(o){return '<button data-o="'+o+'">'+o+'</button>';}).join("")+'</div><div id="qf" style="text-align:center"></div>';}
+function mount(){box=UI.$("#quiz");box.innerHTML='<p class="mute">10 soru. Doğru cevabı seç.</p><button class="btn" data-a="go">Başla</button>';
+ box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.a==="go"){qs=build();i=0;sc=0;return ask();}
+  if(b.dataset.a==="nx"){i++;return ask();}
+  if(b.dataset.o===undefined||UI.$("#qf").innerHTML)return;
+  var ok=b.dataset.o===qs[i].a;b.classList.add(ok?"ok":"bad");
+  if(ok)sc++;else UI.$$(".qo button").forEach(function(x){if(x.dataset.o===qs[i].a)x.classList.add("ok");});
+  UI.$("#qf").innerHTML='<button class="btn" data-a="nx">Devam →</button>';});}
+return{mount:mount};})();
+var App=(function(){
+function list(){UI.$("#lpl").innerHTML=LESSONS.map(function(L){return '<button class="li'+(CUR&&CUR.id===L.id?" on":"")+'" data-l="'+L.id+'"><b>Ders '+L.id+'</b><span>'+L.menu+'</span></button>';}).join("");}
+function open(id){var L=LESSONS.filter(function(x){return x.id===id;})[0]||LESSONS[0];CUR=L;UI.$("#ltitle").textContent=L.title;UI.$("#lsub").textContent=L.sub;var m=UI.$("#lesson");m.innerHTML="";m.appendChild(document.getElementById(L.tpl).content.cloneNode(true));L.setup();try{localStorage.setItem("koreanApp.last3",id);}catch(e){}UI.$("#lp").classList.remove("open");list();window.scrollTo(0,0);}
+function icon(){try{var c=document.createElement("canvas");c.width=c.height=180;var x=c.getContext("2d"),g=x.createLinearGradient(0,0,180,180);g.addColorStop(0,"#4f6bff");g.addColorStop(1,"#a05cff");x.fillStyle=g;x.fillRect(0,0,180,180);x.fillStyle="#fff";x.font="bold 110px sans-serif";x.textAlign="center";x.textBaseline="middle";x.fillText("한",90,98);UI.$("#ati").href=c.toDataURL("image/png");}catch(e){}}
+function sw(id,cls){var c=UI.$(id);function ap(){document.body.classList.toggle(cls,!c.checked);}c.addEventListener("change",ap);ap();}
+function init(){LESSONS.sort(function(a,b){return a.id-b.id;});icon();sw("#swRom","hr");sw("#swTr","ht");var p=UI.$("#lp");
+ UI.$("#burger").addEventListener("click",function(){p.classList.toggle("open");});
+ UI.$("#lpx").addEventListener("click",function(){p.classList.remove("open");});
+ UI.$("#lpl").addEventListener("click",function(e){var b=e.target.closest(".li");if(b)open(+b.dataset.l);});
+ document.addEventListener("pointerdown",function(e){if(p.classList.contains("open")&&!e.target.closest("#lp,#burger"))p.classList.remove("open");});
+ UI.$("#popx").addEventListener("click",function(){UI.$("#pop").classList.remove("on");});
+ document.addEventListener("click",function(e){var d=e.target.closest("[data-say]");if(!d)return;var t=d.dataset.say,q=PR.both(t);
+  UI.$("#popc").innerHTML='<div class="pop-syllable" lang="ko" style="font-size:34px">'+t+'</div><div class="pop-section pop-pron"><div class="pop-pron-row"><span>Romanizasyon</span><strong>'+q.rom+'</strong></div><div class="pop-pron-row"><span>Türkçe okunuş</span><strong>'+q.tr+'</strong></div></div>';UI.$("#pop").classList.add("on");});
+ var last=5;try{last=+localStorage.getItem("koreanApp.last3")||5;}catch(e){}open(last);}
+return{init:init};})();
+document.addEventListener("DOMContentLoaded",App.init);
+</script>
+<style>
+.sy{display:inline-flex;align-items:center;gap:5px}
+:root{--mute:#50506a}
+:focus-visible{outline:3px solid #0b57d0;outline-offset:2px}
+.sw input:focus-visible+span{outline:3px solid #0b57d0;outline-offset:2px}
+.qo .ok::after{content:" ✓"}.qo .bad::after{content:" ✗"}
+body.lg .wrap{zoom:1.25}
+body.hc{background:#fff}body.hc::before{display:none}body.hc{--ink:#000;--mute:#222}
+body.hc .card,body.hc .ch,body.hc .w,body.hc .ms{background:#fff!important;border:2px solid #000!important}
+body.rm *,body.rm *::before{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition:none!important}}
+</style>
+
+<template id="L5">
+<div class="card"><h2>1. Türkçe bilenler için yol haritası</h2>
+<ul class="mute"><li><b>Aynı sıra:</b> Türkçe gibi fiil sonda (özne – nesne – fiil). 저는 사과를 먹어요 = “Ben elmayı yerim”.</li><li><b>Ekler sonda:</b> 은/는, 이/가, 을/를 Türkçedeki ekler gibi kelimeye eklenir (-i hâli ≈ 을/를).</li><li><b>Sayaç şart:</b> Türkçede “üç kişi, iki tane” der, Korecede sayaç hep gerekir: 사람 세 명. Sayıdan sonra çoğul eki yoktur (Türkçe gibi).</li><li><b>Sıra:</b> isim + sayı + sayaç → 커피 두 잔 (iki fincan kahve).</li></ul></div>
+<div class="card"><h2>2. Sayaçlar · 단위명사</h2><p class="mute"><b>Öz Kore sayı</b> + 명, 개, 살, 시, 마리, 잔, 병, 권, 장. <b>Çin-Kore sayı</b> + 분, 원, 층, 월, 일. <b>반</b> = buçuk (세 시 반 = 3:30). İstisna: 6월 = 유월, 10월 = 시월.</p><div class="words" id="g5a"></div></div>
+<div class="card"><h2>3. Sayılı cümleler</h2><p class="mute">Karta dokun, hece hece incele. Sonra defterine yaz.</p><div class="words" id="g5b"></div></div>
+<div class="card"><h2>4. Cümleyi sırala</h2><p class="mute">Türkçe anlamı oku, Korece parçaları doğru sırayla dokun. (Aktif üretim, pasif okumadan daha kalıcıdır.)</p><div id="sb"></div></div>
+<div class="card"><h2>5. Kelime kartları · aralıklı tekrar</h2><div id="fc"></div></div>
+<div class="card"><h2>6. Mini sınav</h2><div id="quiz"></div></div>
+</template>
+
+<template id="L6">
+<div class="card"><h2>1. Nasıl çalışmalı?</h2><ul class="mute"><li><b>Önce hatırla, sonra bak:</b> Karta bakmadan Korecesini aklından getirmeye çalış (geri çağırma).</li><li><b>Aralıklı tekrar:</b> Kartlar 1, 3, 7, 14 gün sonra geri gelir. Günde 10-15 dk, tek seferde 2 saatten iyidir.</li><li><b>Karıştır:</b> Kartlar Ders 7 ve 8 konularını karışık getirir (aynı konuyu arka arkaya çalışmaktan daha kalıcıdır).</li><li><b>Duy + söyle + yaz:</b> Kelimeyi yüksek sesle söyle, sonra defterine yaz.</li><li><b>Kendi çağrışımını üret:</b> 💡 işaretli ipuçları örnek; kendi bulduğun daha iyi yapışır.</li><li><b>Köprü:</b> 오빠/언니/형/누나 konuşanın cinsiyetine göre değişir, tıpkı Türkçedeki abi/abla gibi.</li></ul></div>
+<div class="card"><h2>2. Yeni kelimeler</h2><div class="words" id="g6"></div></div>
+<div class="card"><h2>3. Kelimelerle cümleler</h2><p class="mute"><b>에</b> = -e/-de (yer, zaman). <b>을/를</b> = -i hâli (ünsüzden sonra 을, ünlüden sonra 를). Fiil hep sonda.</p><div class="words" id="g6s"></div></div>
+<div class="card"><h2>4. Cümleyi sırala</h2><div id="sb"></div></div>
+<div class="card"><h2>5. Kelime kartları · aralıklı tekrar</h2><div id="fc"></div></div>
+<div class="card"><h2>6. Mini sınav</h2><div id="quiz"></div></div>
+</template>
+
+<script>
+(function(){
+"use strict";
+var $=UI.$,$$=UI.$$,HG=/[\u3131-\uD7A3]/;
+function W(a){var p=PR.both(a[0]);return '<div class="w" data-say="'+a[0]+'"><b lang="ko">'+a[0]+'</b><div>'+a[1]+'</div>'+(a[2]?'<div class="mute">💡 '+a[2]+'</div>':'')+'<div class="rom">Romanizasyon: '+p.rom+'</div><div class="trk">Türkçe: '+p.tr+'</div></div>';}
+function fill(id,a,f){var e=$(id);if(e)e.innerHTML=a.map(f).join("");}
+function sh(a){return a.slice().sort(function(){return Math.random()-.5;});}
+
+/* ---- Veri ---- */
+var CR=[["명","kişi","세 명"],["개","tane","두 개"],["살","yaş","스무 살"],["시","saat","세 시"],["분","dakika","십 분"],["원","won","오천 원"],["권","kitap, defter","책 한 권"],["잔","fincan, bardak","커피 한 잔"],["병","şişe","물 두 병"],["마리","hayvan","고양이 세 마리"],["장","kâğıt, bilet","표 두 장"],["층","kat","오 층"]];
+var CT5=CR.map(function(a){return [a[0],a[1]+" · örn. "+a[2]];});
+var S5=[["저는 스무 살이에요","Ben yirmi yaşındayım"],["가족이 네 명이에요","Ailem dört kişi"],["지금 세 시예요","Şimdi saat üç"],["지금 세 시 반이에요","Şimdi saat üç buçuk"],["커피 두 잔 주세요","İki kahve lütfen"],["사과 세 개 주세요","Üç elma lütfen"],["이거 얼마예요?","Bu ne kadar?"],["오천 원이에요","Beş bin won"],["책이 한 권 있어요","Bir kitap var"],["고양이가 두 마리 있어요","İki kedi var"],["몇 살이에요?","Kaç yaşındasın?"],["몇 시예요?","Saat kaç?"],["오늘은 십일월 일일이에요","Bugün 1 Kasım"]];
+var SB5=[["Ben yirmi yaşındayım",["저는","스무","살이에요"]],["İki kahve lütfen",["커피","두","잔","주세요"]],["Ailem dört kişi",["가족이","네","명이에요"]],["Şimdi saat üç",["지금","세","시예요"]],["İki kedi var",["고양이가","두","마리","있어요"]],["Bugün 1 Kasım",["오늘은","십일월","일일이에요"]]];
+var V6=[["Aile · 가족",[["엄마","anne","eomma ≈ anne / mama"],["아빠","baba","appa ≈ baba / papa"],["언니","abla (kadın konuşurken)"],["오빠","abi (kadın konuşurken)"],["누나","abla (erkek konuşurken)"],["형","abi (erkek konuşurken)"],["동생","küçük kardeş"],["할머니","büyükanne"],["할아버지","büyükbaba"]]],
+["Yiyecek · 음식",[["과일","meyve"],["사과","elma","sa-gwa ≈ sağ-va: sağ elimde elma var"],["고기","et"],["생선","balık"],["계란","yumurta"],["차","çay","cha ≈ çay (ses benzerliği)"],["김치","kimçi"],["빵","ekmek"]]],
+["Yerler · 장소",[["집","ev","jip ≈ cip: cip ile eve"],["학교","okul"],["회사","şirket"],["병원","hastane"],["은행","banka"],["시장","pazar"],["식당","restoran"],["공원","park"]]],
+["Zaman · 시간",[["오늘","bugün"],["어제","dün"],["내일","yarın"],["지금","şimdi"],["아침","sabah"],["저녁","akşam"],["주말","hafta sonu"],["매일","her gün"]]],
+["Günlük hayat · 일상",[["네","evet"],["아니요","hayır"],["안녕하세요","merhaba"],["감사합니다","teşekkür ederim"],["죄송합니다","özür dilerim"],["얼마예요?","ne kadar?"],["어디예요?","nerede?"],["화장실","tuvalet"],["도와주세요","yardım edin"],["좋아요","iyi, olur"]]],
+["Fiiller · 동사",[["가다","gitmek"],["오다","gelmek"],["먹다","yemek (yiyecek)"],["마시다","içmek"],["보다","bakmak, izlemek"],["하다","yapmak"],["사다","satın almak"],["주다","vermek"],["있다","var, bulunmak"],["없다","yok"]]]];
+var F6=[];V6.forEach(function(g){g[1].forEach(function(x){F6.push([x[0],x[1]]);});});
+var S6=[["저는 학교에 가요","Okula gidiyorum"],["내일 시장에 가요","Yarın pazara gidiyorum"],["커피를 마셔요","Kahve içiyorum"],["밥을 먹어요","Yemek yiyorum"],["오늘 병원에 가요","Bugün hastaneye gidiyorum"],["엄마는 집에 있어요","Annem evde"],["아침에 차를 마셔요","Sabah çay içiyorum"],["언니가 두 명 있어요","İki ablam var"],["화장실이 어디예요?","Tuvalet nerede?"],["이거 주세요","Bunu verin lütfen"],["물 한 병 주세요","Bir şişe su lütfen"],["이름이 뭐예요?","Adın ne?"],["도와주세요","Yardım edin"],["지금 몇 시예요?","Şimdi saat kaç?"]];
+var SB6=[["Okula gidiyorum",["저는","학교에","가요"]],["Yarın pazara gidiyorum",["내일","시장에","가요"]],["Sabah çay içiyorum",["아침에","차를","마셔요"]],["Bugün hastaneye gidiyorum",["오늘","병원에","가요"]],["Annem evde",["엄마는","집에","있어요"]],["Tuvalet nerede?",["화장실이","어디예요?"]],["Bir şişe su lütfen",["물","한","병","주세요"]],["Bunu verin lütfen",["이거","주세요"]]];
+
+/* ---- Cümle sırala ---- */
+var SB=(function(){var box,list,i,pool,used,got,exp,q;
+function nx(){q=list[i++%list.length];exp=q[1];pool=sh(exp);if(pool.join()===exp.join())pool.reverse();used=[];got=[];dr("");}
+function dr(f){var d=got.length===exp.length;box.innerHTML='<p>'+q[0]+'</p><div lang="ko" style="min-height:64px;font-size:30px;border:2px solid var(--line);border-radius:16px;padding:10px 14px;background:#fff">'+got.join(" ")+'</div><div class="row" style="margin:10px 0">'+pool.map(function(t,k){return used.indexOf(k)<0?'<button class="btn g" lang="ko" data-k="'+k+'">'+t+'</button>':"";}).join("")+'</div><p class="mute" role="status">'+f+'</p>'+(d?'<button class="btn" data-n="1">Sonraki cümle →</button>':"");}
+function mount(l){box=$("#sb");if(!box)return;list=sh(l);i=0;box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;if(b.dataset.n)return nx();var k=+b.dataset.k,t=pool[k];
+ if(t===exp[got.length]){used.push(k);got.push(t);if(got.length===exp.length){UI.toast("잘했어요! 👏");PG.mark("ex",exp.join(" "));dr("Doğru! Fiil en sonda, tıpkı Türkçede olduğu gibi.");}else dr("");}
+ else dr("Henüz değil. İpucu: konu ve zaman önce, fiil en sonda.");});nx();}
+return{mount:mount};})();
+
+/* ---- Aralıklı tekrar kartları (1-3-7-14 gün) ---- */
+var FC=(function(){var K="koreanApp.fc",S={},box,q,DAYS=[0,1,3,7,14];
+try{S=JSON.parse(localStorage.getItem(K)||"{}")||{};}catch(e){S={};}
+function sv(){try{localStorage.setItem(K,JSON.stringify(S));}catch(e){}}
+function all(){var seen={},o=[];LESSONS.forEach(function(L){(L.fc||[]).forEach(function(w){if(!seen[w[0]]){seen[w[0]]=1;o.push(w);}});});return o;}
+function due(){var n=Date.now();return sh(all().filter(function(w){var s=S[w[0]];return !s||s.d<=n;}));}
+function dr(rev){if(!q.length){box.innerHTML='<p>Bugünlük tekrar bitti 🎉</p><p class="mute">Kartlar 1, 3, 7 ve 14 gün sonra yeniden gelir.</p>';return;}
+ var w=q[0];box.innerHTML='<p class="mute">Kalan kart: '+q.length+'</p><div class="qs" lang="tr" style="font-size:34px">'+w[1]+'</div>'+(rev?'<div class="qs" lang="ko" style="font-size:56px">'+w[0]+'</div><div class="pr" style="text-align:center">'+PR.both(w[0]).tr+'</div><div class="row" style="justify-content:center"><button class="btn g" data-r="0">Bilemedim</button><button class="btn" data-r="1">Bildim</button></div>':'<p class="mute" style="text-align:center">Önce Korecesini aklından getirmeye çalış.</p><div class="row" style="justify-content:center"><button class="btn" data-s="1">Cevabı göster</button></div>');}
+function mount(){box=$("#fc");if(!box)return;q=due();box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+ if(b.dataset.s)return dr(true);var w=q.shift(),s=S[w[0]]||{b:0};
+ if(b.dataset.r==="1"){s.b=Math.min(s.b+1,4);s.d=Date.now()+DAYS[s.b]*864e5;}else{s.b=0;s.d=0;q.push(w);}
+ S[w[0]]=s;sv();dr(false);});dr(false);}
+return{mount:mount};})();
+
+/* ---- Dersleri kaydet ---- */
+LESSONS.push({id:8,title:"숫자와 문장 · Ders 8",sub:"Sayaçlar ve sayılarla kurulan cümleler.",menu:"Sayı tekrarı: sayaçlar ve sayılı cümleler",tpl:"L5",letters:[],words:CR.map(function(a){return [a[0],a[1]];}),sents:S5,qp:S5,qa:"Anlamı ne?",fc:CR.map(function(a){return [a[0],a[1]+" sayacı"];}),
+ setup:function(){fill("#g5a",CT5,W);fill("#g5b",S5,W);SB.mount(SB5);FC.mount();QZ.mount();}});
+LESSONS.push({id:7,title:"새 단어 · Ders 7",sub:"Aile, yiyecek, yerler, zaman ve temel fiiller.",menu:"Yeni kelimeler (6 konu)",tpl:"L6",letters:[],words:F6,sents:S6,qp:F6.concat(S6),qa:"Anlamı ne?",fc:F6,
+ setup:function(){$("#g6").innerHTML=V6.map(function(g){return '<div style="grid-column:1/-1"><h3>'+g[0]+'</h3></div>'+g[1].map(W).join("");}).join("");fill("#g6s",S6,W);SB.mount(SB6);FC.mount();QZ.mount();}});
+
+/* ---- Erişilebilirlik ---- */
+var A={};try{A=JSON.parse(localStorage.getItem("koreanApp.a11y")||"{}")||{};}catch(e){}
+function ap(){["lg","hc","rm"].forEach(function(k){document.body.classList.toggle(k,!!A[k]);});}
+function sw(k,t){var l=document.createElement("label");l.className="sw";l.innerHTML='<input type="checkbox"><span></span>'+t;var c=l.firstChild;c.checked=!!A[k];c.addEventListener("change",function(){A[k]=c.checked;try{localStorage.setItem("koreanApp.a11y",JSON.stringify(A));}catch(e){}ap();});$(".opts").appendChild(l);}
+function fix(){$$("[data-say]").forEach(function(e){if(!e.hasAttribute("tabindex")){e.tabIndex=0;e.setAttribute("role","button");}});
+ $$(".wa").forEach(function(e){e.tabIndex=0;e.setAttribute("role","textbox");e.setAttribute("aria-label","Korece yazı alanı. Yazmak için Enter");});
+ $$(".ch b,.w b,.big,.chip b,.k b,.qs,.pop-letter,.pop-word,.pop-syllable,.qo button,.sl,#pv,.wa .t").forEach(function(e){if(HG.test(e.textContent))e.lang="ko";});
+ var t=$("#toast");if(t)t.setAttribute("role","status");var p=$("#pop");p.setAttribute("role","dialog");p.setAttribute("aria-modal","true");p.setAttribute("aria-label","Harf ve hece bilgisi");$("#dr").setAttribute("role","complementary");}
+document.addEventListener("keydown",function(e){var t=e.target;
+ if(e.key==="Escape"){$("#pop").classList.remove("on");$("#lp").classList.remove("open");$("#dr").classList.remove("open");return;}
+ if((e.key==="Enter"||e.key===" ")&&t.matches&&t.matches("[data-say]")){e.preventDefault();t.click();}
+ else if(e.key==="Enter"&&t.matches&&t.matches(".wa")){t.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}));}});
+document.addEventListener("click",function(e){if(e.target.closest("[data-say]"))setTimeout(function(){if($("#pop").classList.contains("on"))$("#popx").focus();},60);});
+document.addEventListener("DOMContentLoaded",function(){sw("lg","Büyük yazı");sw("hc","Yüksek kontrast");sw("rm","Hareketi azalt");ap();fix();var f=0;
+ new MutationObserver(function(){if(f)return;f=1;requestAnimationFrame(function(){f=0;fix();});}).observe(document.body,{childList:true,subtree:true});});
+})();
+</script>
+
+<style>
+.dc{background:rgba(255,255,255,.85);border:1px solid #fff;border-radius:14px;padding:8px 12px;text-align:center;box-shadow:0 2px 8px rgba(50,60,140,.12);touch-action:none;min-height:44px;-webkit-user-select:none;user-select:none}
+.dc b{font-size:24px;display:block;font-weight:500}.dc small{font-size:11px;color:var(--mute);display:block}
+.dz{min-height:78px;display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:2px dashed rgba(120,130,190,.5);border-radius:16px;background:rgba(255,255,255,.55);margin:8px 0}
+.dz.bank{border-style:solid;border-color:rgba(120,130,190,.2)}
+.ek{grid-column:1/-1}.ek b{font-size:26px}.ek p{margin:4px 0;font-size:14px}
+</style>
+<template id="L7">
+<div class="card"><h2>Ders planı · 120 dk</h2><ol class="mute"><li><b>0-25 dk · Ders 5:</b> okuma atölyesi, hece çözme</li><li><b>25-50 dk · Ders 6:</b> ekler ve kullanım kuralları</li><li><b>50-75 dk · Ders 7:</b> yeni kelimeler ve tekrar kartları</li><li><b>75-95 dk · Ders 8:</b> sayı tekrarı, sayaçlar ve sayılı cümleler</li><li><b>95-115 dk · Ders 9:</b> cümle atölyesi, sırala ve serbest mod</li><li><b>115-120 dk:</b> mini sınav ve ödev</li></ol></div>
+<div class="card"><h2>1. Heceyi okumanın 3 adımı</h2><ol class="mute"><li><b>Başlangıç ünsüzünü</b> söyle (ㅇ sessizdir).</li><li><b>Ünlüyü</b> ekle: ㅏ ㅓ ㅣ sağda, ㅗ ㅜ ㅡ altta durur.</li><li>Altta <b>son ünsüz (받침)</b> varsa hecenin sonunda kısaca bitir.</li></ol><p class="mute">Örnek: 가 = ㄱ + ㅏ → ga. 간 = ㄱ + ㅏ + ㄴ → gan.</p></div>
+<div class="card"><h2>2. Heceyi çöz</h2><p class="mute">Önce kendin oku, sonra <b>Çöz</b>'e dokun.</p><div id="hz"></div></div>
+<div class="card"><h2>3. Okuma merdiveni</h2><p class="mute">Karta dokununca harf harf açılır.</p><h3>Seviye 1 · ünsüz + ünlü</h3><div class="grid" id="r1"></div><h3>Seviye 2 · son ünsüzlü</h3><div class="grid" id="r2"></div><h3>Seviye 3 · iki heceli kelime</h3><div class="grid" id="r3"></div></div>
+</template>
+<template id="L8">
+<div class="card"><h2>1. Ekler (조사) nedir?</h2><p class="mute">Türkçedeki -i, -e, -de, -in ekleri gibi, Korecede de isimden sonra küçük ekler gelir. Ekler <b>isme yapışır</b>, fiil <b>en sonda</b> durur. Çoğu ek, ismin <b>son harfinde alt kutu (받침) var mı</b> diye seçilir: varsa ilk biçim, yoksa ikinci biçim.</p><p class="mute">Sık duyulan: konuşmada özne ve nesne ekleri çoğu zaman düşer, Türkçede özne düştüğü gibi.</p></div>
+<div class="card"><h2>2. Ek kartları</h2><div class="words" id="g8"></div></div>
+<div class="card"><h2>3. Kurallar</h2><ul class="mute"><li><b>은/는 ile 이/가:</b> 은/는 konuyu sunar (“…ise”), 이/가 özneyi söyler. İlk tanışmada 저는, yeni bilgide 이/가.</li><li><b>에 ile 에서:</b> 에 = varış/var-yok/zaman (학교에 가요, 집에 있어요). 에서 = eylemin yapıldığı yer (식당에서 먹어요).</li><li><b>(으)로:</b> 받침 yoksa ya da ㄹ ise 로, başka 받침 varsa 으로.</li><li><b>와/과:</b> ünlüden sonra 와, ünsüzden sonra 과. Konuşmada 하고 her zaman olur.</li></ul></div>
+<div class="card"><h2>4. Eki seç</h2><div id="ek"></div></div>
+</template>
+<template id="L9">
+<div class="card"><h2>1. Cümle atölyesi</h2><p class="mute"><b>Sırala:</b> Türkçe cümleyi Korece parçalarla kur. <b>Serbest:</b> tüm parçalardan istediğin cümleyi kur; anlamlar altta görünür. Sürükle, ya da parçaya dokun.</p><div id="dd"></div></div>
+</template>
+<script>
+(function(){
+"use strict";
+var $=UI.$;
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function sh(a){return a.slice().sort(function(){return Math.random()-.5;});}
+/* ---- 7: heceyi çöz ---- */
+var HZ=(function(){var box,lv=1,cur,rev=false,C=[..."ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ"],VS=[..."ㅏㅓㅗㅜㅡㅣ"],TS=[..."ㄴㄹㅁㅇㄱㅂ"],W3="나무 바다 아이 우유 사과 학교 친구 가방 의자 시장 사랑 김치".split(" ");
+function mk(l,v,t){return String.fromCharCode(0xAC00+((HC.L.indexOf(l)*21+HC.V.indexOf(v))*28+HC.T.indexOf(t||"")));}
+function pick(){return lv===1?mk(rnd(C),rnd(VS),""):lv===2?mk(rnd(C),rnd(VS),rnd(TS)):rnd(W3);}
+function sy(c,s){return '<span class="sy"><b lang="ko">'+c+'</b><u>'+(s||"sessiz")+'</u></span>';}
+function step(ch){var d=HC.dec(ch);if(!d)return "";var a=[sy(d.l,PR.TI[d.li]),sy(d.v,PR.TV[d.vi])];if(d.t)a.push(sy(d.t,PR.FT[d.t]));return '<div class="pop-section"><b lang="ko" style="font-size:32px">'+ch+'</b> = '+a.join(" + ")+' → <b>'+PR.both(ch).tr+'</b></div>';}
+function dr(){box.innerHTML='<div class="seg" role="group">'+["Ünsüz+ünlü","+Son ünsüz","Kelime"].map(function(t,i){return '<button data-l="'+(i+1)+'" class="'+(lv===i+1?"on":"")+'">'+t+'</button>';}).join("")+'</div><div class="qs" lang="ko">'+cur+'</div>'+(rev?[...cur].map(step).join(""):'<p class="mute" style="text-align:center">Okuyabildin mi?</p>')+'<div class="row" style="justify-content:center;margin-top:10px"><button class="btn g" data-a="r">Çöz</button><button class="btn" data-a="n">Sonraki →</button></div>';}
+function mount(){box=$("#hz");cur=pick();box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;if(b.dataset.l){lv=+b.dataset.l;rev=false;cur=pick();}else if(b.dataset.a==="r")rev=true;else{rev=false;cur=pick();}dr();});dr();}
+return{mount:mount};})();
+function cards(id,a){$(id).innerHTML=a.map(function(c){return '<div class="ch" data-say="'+c+'"><b lang="ko">'+c+'</b><u class="trk">'+PR.both(c).tr+'</u></div>';}).join("");}
+/* ---- 8: ekler ---- */
+var EK=[["은 / 는","Konu eki","-ise, -ın","받침 varsa 은, yoksa 는","저는 학생이에요","Ben öğrenciyim"],["이 / 가","Özne eki","özne","받침 varsa 이, yoksa 가","비가 와요","Yağmur yağıyor"],["을 / 를","Nesne eki","-i hâli","받침 varsa 을, yoksa 를","커피를 마셔요","Kahve içiyorum"],["에","Yer, zaman, yön","-e, -de","her ismin ardından aynı","학교에 가요","Okula gidiyorum"],["에서","Eylemin yeri","-de, -den","her ismin ardından aynı","식당에서 먹어요","Restoranda yiyorum"],["도","de / da","de / da","her ismin ardından aynı","저도 학생이에요","Ben de öğrenciyim"],["의","İyelik","-in","her ismin ardından aynı","엄마의 책","Annemin kitabı"],["와 / 과 · 하고","ile, ve","-le, -la","와 ünlüden sonra, 과 ünsüzden sonra; 하고 hep","엄마하고 가요","Annemle gidiyorum"],["(으)로","Araç, yön","-le, -e doğru","받침 yok ya da ㄹ: 로, diğerleri: 으로","버스로 가요","Otobüsle gidiyorum"],["부터 / 까지","Başlangıç / bitiş","-den / -e kadar","her ismin ardından aynı","아홉 시부터 열 시까지","Dokuzdan ona kadar"],["이에요 / 예요","-dir, -im","-dır","받침 varsa 이에요, yoksa 예요","의사예요","Doktorum"]];
+var NS=[..."학교 사과 커피 물 책 의자 친구 엄마 아이 집 차 밥 시장 학생".split(" ")],PS=[["은","는"],["이","가"],["을","를"]];
+var ED=(function(){var box,n,p,sc=0,t=0;
+function nx(){n=rnd(NS);p=rnd(PS);dr("");}
+function dr(f){box.innerHTML='<p class="mute">Doğru eki seç ('+sc+'/'+t+')</p><div class="qs" lang="ko" style="font-size:52px">'+n+' ___</div><div class="qo">'+sh(p).map(function(x){return '<button lang="ko" data-o="'+x+'">'+x+'</button>';}).join("")+'</div><p class="mute" role="status">'+f+'</p>';}
+function mount(){box=$("#ek");nx();box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b||!b.dataset.o)return;var has=HC.dec(n[n.length-1]).t!=="",ok=b.dataset.o===p[has?0:1];t++;if(ok)sc++;UI.toast(ok?"잘했어요! 👏":"Tekrar bak");var m=ok?"Doğru. ":"Yanlış. ";var r=m+n+(has?" 받침 ile bitiyor → ":" 받침 yok → ")+p[has?0:1];nx();dr(r);});}
+return{mount:mount};})();
+/* ---- 9: cümle atölyesi ---- */
+var SQ=[["Ben okula gidiyorum",[["저는","ben"],["학교에","okula"],["가요","gidiyorum"]]],["Yarın pazara gidiyorum",[["내일","yarın"],["시장에","pazara"],["가요","gidiyorum"]]],["Ben kahve içiyorum",[["저는","ben"],["커피를","kahveyi"],["마셔요","içiyorum"]]],["İki kahve lütfen",[["커피","kahve"],["두","iki"],["잔","fincan"],["주세요","lütfen verin"]]],["Üç elma lütfen",[["사과","elma"],["세","üç"],["개","tane"],["주세요","lütfen verin"]]],["Ben yirmi yaşındayım",[["저는","ben"],["스무","yirmi"],["살이에요","yaşındayım"]]],["Annem evde",[["엄마는","annem"],["집에","evde"],["있어요","var, bulunuyor"]]],["Bugün hastaneye gidiyorum",[["오늘","bugün"],["병원에","hastaneye"],["가요","gidiyorum"]]],["Ailem dört kişi",[["가족이","aile"],["네","dört"],["명이에요","kişidir"]]],["Sabah çay içiyorum",[["아침에","sabah"],["차를","çayı"],["마셔요","içiyorum"]]],["Okulda arkadaş var",[["학교에","okulda"],["친구가","arkadaş"],["있어요","var"]]],["Restoranda yemek yiyorum",[["식당에서","restoranda"],["밥을","yemeği"],["먹어요","yiyorum"]]],["Bu ne kadar?",[["이거","bu"],["얼마예요?","ne kadar"]]]];
+var XC=[["은","konu (받침 var)"],["는","konu (받침 yok)"],["이","özne (받침 var)"],["가","özne (받침 yok)"],["을","nesne (받침 var)"],["를","nesne (받침 yok)"],["에","-e, -de"],["에서","-de, -den"],["도","de, da"],["의","-in"],["하고","ile, ve"],["한","bir"],["두","iki"],["세","üç"],["네","dört"],["다섯","beş"],["어제","dün"],["학생","öğrenci"],["책","kitap"],["물","su"],["없어요","yok"],["와요","geliyorum"],["봐요","bakıyorum"],["해요","yapıyorum"],["사요","satın alıyorum"]];
+var DD=(function(){var box,st={m:"s",q:null,bank:[],line:[],fb:""},drag,g;
+function all(){var s={},o=[];SQ.forEach(function(q){q[1].forEach(function(c){if(!s[c[0]]){s[c[0]]=1;o.push(c);}});});XC.forEach(function(c){if(!s[c[0]]){s[c[0]]=1;o.push(c);}});return o;}
+function fresh(){st.line=[];st.fb="";if(st.m==="s"){st.q=rnd(SQ);st.bank=sh(st.q[1]);}else{st.q=null;st.bank=all();}}
+function ch(c,k,w){return '<button type="button" class="dc" data-w="'+w+'" data-k="'+k+'"><b lang="ko">'+c[0]+'</b><small>'+c[1]+'</small></button>';}
+function R(){box.innerHTML='<div class="row"><div class="seg" role="group"><button data-m="s" class="'+(st.m==="s"?"on":"")+'">Sırala</button><button data-m="f" class="'+(st.m==="f"?"on":"")+'">Serbest</button></div><button class="btn g" data-a="new">🔄 Yenile</button><button class="btn g" data-a="clr">Temizle</button>'+(st.m==="s"?'<button class="btn" data-a="chk">Kontrol</button>':"")+'</div>'+(st.q?'<p style="font-size:20px;margin:10px 0 0">'+st.q[0]+'</p>':"")+'<div class="dz" data-z="line">'+st.line.map(function(c,k){return ch(c,k,"l");}).join("")+'</div><p class="mute" lang="tr">'+st.line.map(function(c){return c[1];}).join(" + ")+'</p><div class="dz bank" data-z="bank">'+st.bank.map(function(c,k){return ch(c,k,"b");}).join("")+'</div><p class="mute" role="status">'+st.fb+'</p>';}
+function up(e){if(!drag)return;var d=drag;drag=null;if(g){g.remove();g=null;}var src=d.w==="l"?st.line:st.bank,c=src[d.k];
+ if(!d.m){src.splice(d.k,1);(d.w==="l"?st.bank:st.line).push(c);}
+ else{var el=document.elementFromPoint(e.clientX,e.clientY),z=el&&el.closest(".dz");if(!z){R();return;}src.splice(d.k,1);
+  if(z.dataset.z==="line"){var tg=el.closest(".dc"),i=tg&&tg.dataset.w==="l"?+tg.dataset.k:st.line.length;if(d.w==="l"&&i>d.k)i--;st.line.splice(i,0,c);}else st.bank.push(c);}
+ st.fb="";R();}
+function mount(){box=$("#dd");fresh();R();
+ box.addEventListener("click",function(e){var b=e.target.closest("button");if(!b||b.classList.contains("dc"))return;
+  if(b.dataset.m){st.m=b.dataset.m;fresh();}else if(b.dataset.a==="new")fresh();else if(b.dataset.a==="clr"){st.bank=st.bank.concat(st.line);st.line=[];st.fb="";}
+  else if(b.dataset.a==="chk"){var ok=st.line.map(function(c){return c[0];}).join(" ")===st.q[1].map(function(c){return c[0];}).join(" ");st.fb=ok?"Doğru! 잘했어요 👏 Fiil en sonda.":"Henüz değil. Konu ve zaman önce, fiil en sonda.";if(ok)UI.toast("잘했어요! 👏");}
+  R();});
+ box.addEventListener("pointerdown",function(e){var c=e.target.closest(".dc");if(!c)return;e.preventDefault();drag={w:c.dataset.w,k:+c.dataset.k,x:e.clientX,y:e.clientY,m:0};try{c.setPointerCapture(e.pointerId);}catch(_){}});
+ box.addEventListener("pointermove",function(e){if(!drag)return;if(!drag.m&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>8){drag.m=1;g=document.createElement("div");g.className="dc";g.style.cssText="position:fixed;z-index:99;pointer-events:none;opacity:.92";g.innerHTML="<b>"+(drag.w==="l"?st.line:st.bank)[drag.k][0]+"</b>";document.body.appendChild(g);}if(g){g.style.left=e.clientX-30+"px";g.style.top=e.clientY-44+"px";}});
+ box.addEventListener("pointerup",up);box.addEventListener("pointercancel",up);}
+return{mount:mount};})();
+LESSONS.push({id:5,title:"읽기 · Ders 5",sub:"Heceleri çözmek ve okumak için okuma atölyesi.",menu:"Okuma atölyesi (hece çözme)",tpl:"L7",letters:[],words:[],sents:[],qp:[],setup:function(){HZ.mount();cards("#r1",[..."가나다라마바사아자차카타파하"]);cards("#r2","간 말 밤 방 산 집 물 밥 책 꽃".split(" "));cards("#r3","나무 바다 아이 우유 사과 학교 친구 가방 의자 시장".split(" "));}});
+LESSONS.push({id:6,title:"조사 · Ders 6",sub:"Cümle kurmak için ekler ve kullanım kuralları.",menu:"Ekler (은/는, 이/가, 을/를, 에…)",tpl:"L8",letters:[],words:[],sents:[],qp:[],setup:function(){$("#g8").innerHTML=EK.map(function(x){return '<div class="w ek"><b lang="ko">'+x[0]+'</b> <span class="mute">· '+x[1]+' ('+x[2]+')</span><p>Kural: '+x[3]+'</p><p data-say="'+x[4]+'" style="cursor:pointer"><b lang="ko" style="font-size:20px">'+x[4]+'</b> · '+x[5]+'</p></div>';}).join("");ED.mount();}});
+LESSONS.push({id:9,title:"문장 만들기 · Ders 9",sub:"Öğretmen atölyesi: sürükle-bırak cümle kurma.",menu:"Cümle atölyesi (sürükle-bırak)",tpl:"L9",letters:[],words:[],sents:[],qp:[],setup:function(){DD.mount();}});
+})();
+</script>
+
+<style>
+#tn{position:fixed;left:6px;bottom:calc(16px + env(safe-area-inset-bottom));width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.7);border:1px solid #fff;font-size:17px;opacity:.35;z-index:44;padding:0}
+#tn:hover,#tn:focus-visible{opacity:1}
+#tp{position:fixed;top:56px;left:50%;transform:translateX(-50%);width:min(94vw,580px);max-height:calc(100vh - 80px);overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(255,255,255,.97);border:1px solid #fff;border-radius:24px;box-shadow:0 24px 70px rgba(30,40,100,.3);padding:16px 18px 20px;z-index:70;display:none}
+#tp.on{display:block}
+#tp details{margin:8px 0;background:#f2f2fa;border-radius:14px;padding:8px 14px}
+#tp summary{font-weight:700;min-height:34px;cursor:pointer}
+#tp p{line-height:1.75;margin:8px 0}
+@media print{#tn,#tp{display:none!important}}
+</style>
+<button id="tn" type="button" aria-label="Öğretmen metni" title="Öğretmen metni">🎓</button>
+<div id="tp" role="dialog" aria-label="Öğretmen metni"><div class="dh"><h2 id="tpt" style="margin:0"></h2><button class="x" id="tpx" type="button" aria-label="Kapat">✕</button></div><div id="tpb"></div></div>
+<script>
+(function(){
+"use strict";
+var N={
+5:[["Dersin girişi · 120 dk","Bugün iki saatte okumadan başlayıp cümle kurmaya gideceğiz. Sıra bilerek böyle: okumayı bilmeyen cümle kuramaz. Önce hece çözeceğiz, sonra cümlelerin yapıştırıcısı olan ekleri öğreneceğiz, sonra kelime ve sayıları cümle içinde kullanacağız, en sonda hep birlikte cümle kuracağız.|Hata yapmak serbest. Hatırlamaya çalışmak öğrenmenin kendisidir; yanlış yapınca beyin doğruyu daha iyi yakalar."],
+["Hecenin 3 adımı","Korece hece bir kare gibidir. Karenin içine sırayla üç şey girer: başlangıç ünsüzü, ünlü, istersek altta son ünsüz. 가 = ㄱ + ㅏ, yani g + a = ga. Altına ㄴ gelirse 간, gan.|Ünlü nerede durur? ㅏ ㅓ ㅣ gibi dikey olanlar ünsüzün sağında, ㅗ ㅜ ㅡ gibi yatay olanlar altında. ㅇ başta sessizdir: 아 sadece a. ㅇ altta ise ng okunur: 방, bang.|Son ünsüzde ağız kapanır, ses patlamaz. 밥 bap diye okunur ama dudaklar kapanıp ses orada biter."],
+["Heceyi çöz","Ben ekrandaki heceyi göstereceğim, siz önce kendi başınıza okuyun. Sonra Çöz'e basacağım ve hecenin parçalarını göreceğiz: ünsüz neydi, ünlü neydi, altta bir şey var mıydı.|Hız önemli değil, doğruluk önemli. Seviye 1'de ünsüz ve ünlü, seviye 2'de son ünsüz, seviye 3'te iki heceli kelimeler var. Sınıf takılırsa bir seviye geri dönün."],
+["Okuma merdiveni","Kartlara dokununca harf harf açılıyor. Önce hepsini birlikte yüksek sesle okuyun, sonra tek tek öğrencilere sorun.|Kelimelerde bazı sesler değişir, örneğin 학교 hakkyo gibi okunur. Şimdilik bunlara girmeyin: okuyoruz, kuralı sonra göreceğiz deyin."]],
+6:[["Ekler nedir?","Türkçede kelimenin sonuna -i, -e, -de, -in getiririz: kitabı, okula, evde, annemin. Korece de aynı mantıkla çalışır; ekler isme yapışır.|En önemli sıra kuralı: özne, nesne, fiil. Fiil en sonda, tıpkı Türkçede olduğu gibi. Ben elmayı yerim = 저는 사과를 먹어요, kelime kelime aynı sıra."],
+["받침 kuralı","Ekin biçimini ismin son harfine bakarak seçiyoruz: altta ünsüz var mı? Varsa ilk biçim, yoksa ikinci. 책 altında ㄱ var, 책을. 사과 altında bir şey yok, 사과를.|Türkçedeki uyuma benzetebilirsiniz: kitap-ı, kapı-yı. Orada da ek, kelimenin sesine göre biçim değiştirir. Burada tek kontrol: altta bir şey var mı?"],
+["은 / 는","Konu ekidir, ‘…ise, …gelince’ gibi. 저는 학생이에요: ben öğrenciyim. Tanışırken hep 저는 ile başlarız.|받침 varsa 은, yoksa 는. 엄마는 (alt yok), 선생님은 (altta ㅁ var).|Karşılaştırırken de kullanılır: Ben kahve içerim, o çay içer. Vurgu yapar."],
+["이 / 가","Özne ekidir; kim ya da ne yapıyor sorusunun cevabını işaretler. 비가 와요: yağmur yağıyor. Yeni bilgi verirken ve soruda kullanılır: 누가 왔어요? Kim geldi? 친구가 왔어요.|받침 varsa 이, yoksa 가. 은/는 ile farkı: 은/는 ‘bu konu hakkında konuşuyorum’, 이/가 ‘şunu haber veriyorum’. Başlangıçta bu inceliğe girmeyin, sık duydukça oturur."],
+["을 / 를","Nesne ekidir, Türkçedeki -i hâli: kahveyi, kitabı. 커피를 마셔요: kahveyi içiyorum.|받침 varsa 을, yoksa 를. Konuşmada çoğu zaman düşer (커피 마셔요), ama derste ekli kullanalım."],
+["에 / 에서","에 yer ve zaman içindir: 학교에 가요 (okula gidiyorum), 집에 있어요 (evdeyim), 세 시에 (saat üçte). 에서 eylemin yapıldığı yerdir: 식당에서 먹어요 (restoranda yiyorum).|İpucu: fiil gitmek, olmak, bulunmak ise 에. Bir iş yapılıyorsa (yemek, çalışmak, okumak) 에서."],
+["도, 의, 하고, (으)로, 부터/까지","도 = de/da: 저도 학생이에요 (ben de). 은/는 ya da 이/가 yerine geçer, yanına eklenmez.|의 = -in: 엄마의 책, annemin kitabı. Konuşmada çoğu zaman düşer; benim için 제 deriz.|하고 = ile, ve: 엄마하고 가요, annemle gidiyorum. En kolayı bu; 와/과 daha yazılıdır (ünlüden sonra 와, ünsüzden sonra 과).|(으)로 = araç ve yön: 버스로 가요, otobüsle gidiyorum. Alt yok ya da ㄹ ise 로, başka ünsüz varsa 으로.|부터/까지 = -den, -e kadar: 아홉 시부터 열 시까지."],
+["이에요 / 예요","Türkçedeki -dir, -im karşılığıdır. 학생이에요: öğrenciyim. 받침 varsa 이에요, yoksa 예요: 의사예요, doktorum.|Olumsuzu 아니에요 (değil): 학생이 아니에요. Bu ders için sadece olumluyu görüyoruz, olumsuzu duyarsanız tanısınlar yeter."],
+["Eki seç","Rastgele bir isim geliyor, eksik eki seçiyorsunuz; doğru ya da yanlış, nedenini hemen yazıyor. Öğrenci tahmin etmesin: önce hecenin altında bir şey var mı diye baktırın."]],
+7:[["Nasıl çalışmalı?","Kelimede en önemli kural: önce hatırlamaya çalışın, sonra bakın. Karta bakıp ‘biliyorum’ demek tanımaktır; hatırlamak ise beynin çalışmasıdır ve kalıcı olan odur.|Kartlar 1, 3, 7 ve 14 gün arayla geri gelir, çünkü unutmak üzereyken yapılan tekrar kalıcılaştırır. Evde günde on dakika yeter.|Kendi çağrışımınızı bulun: 사과, sağ-va, sağ elimde elma var. Sizin bulduğunuz benimkinden iyidir."],
+["Aile","Kardeş sözcükleri konuşanın cinsiyetine göre değişir; Türkçedeki abi ve abla gibi. Kadın biri ağabeyine 오빠, ablasına 언니 der. Erkek biri ağabeyine 형, ablasına 누나 der. Küçük kardeş ikisi için de 동생.|엄마 ve 아빠 anne, baba ile benzer: eomma, appa. 할머니 büyükanne, 할아버지 büyükbaba."],
+["Yiyecek","차 çay gibi okunur ve çay demektir; aynı yazılan 차 araba da demek, bağlamdan anlaşılır. 밥 sadece pilav değil, genel olarak yemek ve öğün demektir. 김치 fermente sebzedir."],
+["Yerler ve zaman","Yere gidiş 에 ile söylenir: 학교에 가요, 시장에 가요. Yerde yapılan iş 에서 ile: 식당에서 먹어요.|오늘 bugün, 어제 dün, 내일 yarın cümlenin başına gelir ve ek almaz: 내일 학교에 가요. Gün içi sözcüklerde 에 gelir: 아침에, sabahleyin."],
+["Günlük hayat","Bunlar sınıf dışında en çok işe yarayanlar: evet, hayır, merhaba, teşekkür, özür, ne kadar, nerede. Kalıp olarak ezberletin, parçalamayın. 화장실이 어디예요? Tuvalet nerede, hayat kurtarır."],
+["Fiiller ve cümleler","Fiiller sözlükte -다 ile biter: 가다, gitmek. Cümlede -요 biçimi kullanırız: 가요. Bu tek biçim hem gidiyorum hem gider anlamına gelir; zamanı bağlamdan anlarız. Özne bağlamdan anlaşılıyorsa söylenmez, Türkçedeki gibi.|Kelimelerle cümleler hep aynı kalıp: konu + yer+에 + fiil. Önce Türkçeyi okuyun, sonra parçaları tek tek söyletin: 저는, 학교에, 가요."]],
+8:[["Türkçe bilenler için yol haritası","Türkçe bilen biri için güzel haber: cümle sırası aynı, özne, nesne, fiil. Ekler sona gelir. Sayıdan sonra çoğul eki yok, tıpkı üç kitap dememiz gibi.|Tek fark sayaç: Türkçede de iki tane, üç kişi deriz; tane ve kişi birer sayaçtır. Korecede bunlar çok daha fazla ve sayarken zorunlu."],
+["İki sayı sistemi","Çin-Kore (일, 이, 삼) ve öz Kore (하나, 둘, 셋). Kısa kural: yaş, saat, adet, kişi, hayvan, fincan, şişe, kitap, kâğıt öz Kore ile; dakika, para, kat, ay, gün, telefon Çin-Kore ile.|Sayaçtan önce 하나 한, 둘 두, 셋 세, 넷 네, 스물 스무 olur: 한 명, 두 개, 세 시, 스무 살."],
+["Sayaçlar","Kalıp: isim + sayı + sayaç. 커피 두 잔, iki fincan kahve. 사과 세 개, üç elma. 가족이 네 명, ailem dört kişi. 고양이 세 마리. 책 한 권. 표 두 장. 오 층, beşinci kat.|Saatte saat kısmı öz Kore, dakika Çin-Kore: 세 시 십 분. Buçuk için 반: 세 시 반.|Aylar Çin-Kore: 일월, 이월… Haziran 유월 ve Ekim 시월 istisnadır."],
+["Sayılı cümleler","저는 스무 살이에요: yirmi yaşındayım. 몇 살이에요? Kaç yaşındasın. 몇 시예요? Saat kaç. 이거 얼마예요? Bu ne kadar; cevap 오천 원이에요, para Çin-Kore sayıyla. 오늘은 십일월 일일이에요, bugün 1 Kasım, ay ve gün Çin-Kore.|Her cümlede önce Türkçeyi okuyun, sonra sayıyı ve sayacı öğrencilere buldurun."],
+["Cümleyi sırala ve kartlar","Önce Türkçeyi okuyun, sonra Korece parçaları sıraya dizin. Fiil sonda. Yanlışta ipucu veriyor.|Kartlarda önce Türkçeyi okuyup Korecesini aklınızdan getirmeye çalışın, sonra Cevabı göster. Bildim ya da Bilemedim ile kartın ne zaman geri geleceği belirlenir."]],
+9:[["Sırala","Ekrandaki Türkçe cümleyi Korece parçalarla kurun. Parçayı sürükleyebilir ya da dokunabilirsiniz; dokununca cümleye girer, tekrar dokununca geri döner. Altta parçaların anlamları çıkar.|Kontrol ile sıra denetlenir, Yenile yeni cümle getirir. Sınıfa sorun: cümlenin ilk parçası ne olmalı? Fiil nerede?"],
+["Serbest","Burada tüm parçalar var. Öğrencilere kendi cümlelerini kurdurun: Bugün hastaneye gidiyorum, Annem evde, İki kahve lütfen. Ek parçalarını da kullandırın.|Cümle yanlışsa altta çıkan anlam çizgisi hatayı gösterir; sorunu sınıfa buldurun."],
+["Kapanış","Son beş dakikada her öğrenci üç şey yapsın: bir hece okusun, bir ek seçsin, bir sayılı cümle kursun. Ödev: Ders 7 ve 8 kartlarını her gün on dakika."]]};
+var T={5:"Ders 5 · Okuma",6:"Ders 6 · Ekler",7:"Ders 7 · Kelimeler",8:"Ders 8 · Sayılar",9:"Ders 9 · Atölye"};
+var P=document.getElementById("tp");
+function open(){var id=CUR&&CUR.id,a=N[id]||[];document.getElementById("tpt").textContent="Öğretmen metni · "+(T[id]||"");
+ document.getElementById("tpb").innerHTML=a.length?a.map(function(x){return "<details><summary>"+x[0]+"</summary>"+x[1].split("|").map(function(p){return "<p>"+p+"</p>";}).join("")+"</details>";}).join(""):"<p>Bu ders için metin yok.</p>";P.classList.add("on");}
+document.getElementById("tn").addEventListener("click",function(){P.classList.contains("on")?P.classList.remove("on"):open();});
+document.getElementById("tpx").addEventListener("click",function(){P.classList.remove("on");});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")P.classList.remove("on");});
+})();
+</script>
+
+<style>
+mark{background:linear-gradient(transparent 48%,#ffd84d 48%);color:inherit;padding:0 2px;border-radius:3px}
+.card h2.hh{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ti{flex:none;width:44px;height:44px;border-radius:50%;font-size:20px;color:#fff;background:rgb(var(--t));box-shadow:0 4px 12px rgba(var(--t),.4)}
+.sm{background:#fff8d6;border:1px solid #f1dc7a;border-radius:16px;padding:12px 14px;margin:10px 0;line-height:1.7}
+.sm .l{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;color:#8a6d00}
+.egs{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:8px;margin-top:10px}
+.eg{background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.06);border-radius:12px;padding:8px 10px;text-align:center}
+.eg b{font-size:26px;display:block}.eg .trk{display:block;font-size:12px;color:#7a4dff}.eg i{display:block;font-size:13px;font-style:normal;color:var(--mute);margin-top:2px}
+body.nr .rv:not(.on){filter:blur(6px);cursor:pointer}
+body.hs .sm{display:none}
+.gl,.xt{background:rgba(255,255,255,.7);border:1px solid #fff;border-radius:18px;padding:12px 16px;margin:10px 0;line-height:1.6}
+.xt label{display:block;min-height:36px}.xt input{width:20px;height:20px;vertical-align:-4px;margin-right:8px}
+.tk{background:#e6f7ee!important;border:1px solid #9fdcb9}
+</style>
+<script>
+(function(){
+"use strict";
+var $=UI.$;
+var R={
+5:{g:"Hece kutusunu çözmek: başta ünsüz, sonra ünlü, altta (varsa) son ünsüz.",
+x:["Tahtadaki 3 heceyi tek başına oku","Bir hecenin parçalarını söyle: ünsüz, ünlü, son ünsüz","Bir kelimeyi (나무) yüksek sesle oku"],
+c:[["3 adımı","Her hece küçük bir <mark>kutudur</mark>. İçine sırayla girer: <mark>1) başlangıç ünsüzü, 2) ünlü, 3) en altta varsa son ünsüz</mark>. Yuvarlak harf başta olursa sessizdir, yok sayılır.",
+[["가","g + a"],["나","n + a"],["아","sessiz + a"],["간","g + a + n"],["오","sessiz + o"]],
+["Tahtaya büyük bir kare çizin. Önce kare boş, sonra ünsüz, sonra ünlü, sonra altı dolsun.","Ünlü yönü: ince uzun (dikey) ünlüler ünsüzün <mark>sağına</mark>, yatay ünlüler ünsüzün <mark>altına</mark> yazılır. Öğrenciler en çok burada şaşırır.","Sık hata: başta sessiz olan yuvarlak harfi ‘o’ ya da ‘ng’ diye okumak. Başta okunmaz; altta ‘ng’ sesi verir.","▶ Görev: Tahtaya bir hece yazın. Öğrenciler sırayla parçalarını parmakla gösterip söylesin."]],
+["Heceyi çöz","<mark>Önce kendin oku</mark>, sonra Çöz tuşuna bas. Her heceye üç soru sor: Başta ne var? Ünlü ne? Altta bir şey var mı?",
+[["다","d + a"],["소","s + o"],["밤","b + a + m"],["길","g + i + l"]],
+["Ekrandaki heceyi önce sessizce okutun, sonra Çöz’e basın. Cevap öğrencide doğmadan açmayın.","Hız değil doğruluk önemli. Üç seviyeyi sırayla geçin; seviye atlamak için üst üste 3 doğru isteyin.","▶ Görev: İkili çalışma. Biri hece seçer, diğeri okur, sonra rol değiştirirler."]],
+["Okuma merdiveni","Üç seviye var, kolaydan zora. <mark>Önce hep birlikte, sonra tek tek</mark> yüksek sesle oku. Acele etme.",
+[["나무","ağaç"],["바다","deniz"],["아이","çocuk"],["우유","süt"]],
+["Kartlara dokununca harfler tek tek açılır. Her kartta önce sınıf birlikte okusun, sonra tek öğrenciye sorun.","Bazı kelimelerde ses değişir (örneğin 학교). Şimdilik girmeyin; ‘duyduğunuz gibi okuyun’ deyin.","▶ Görev: Bir kelime seçin, öğrenciler defterine yazıp altına Türkçe okunuşunu yazsın."]]]},
+6:{g:"Eklerin kelimeye yapıştığını, fiilin en sonda durduğunu ve ek seçmeyi öğrenmek.",
+x:["Bir kelimenin altı dolu mu boş mu söyle","3 kelimeye doğru ek ekle","Bir cümlede fiili göster"],
+c:[["nedir","Türkçede kitap-<mark>ı</mark>, okul-<mark>a</mark> deriz. Korecede de <mark>küçük ekler kelimenin sonuna yapışır</mark>. Sıra Türkçe gibi: <mark>özne, nesne, fiil</mark>. Fiil en sonda.",
+[["엄마가 와요","Annem geliyor"],["커피를 마셔요","Kahveyi içiyorum"],["집에 있어요","Evdeyim"],["저는 학생이에요","Ben öğrenciyim"]],
+["Önce Türkçeden başlayın: ‘Ben okula gidiyorum’. Fiil nerede? En sonda. Korecede de aynı.","Ek, kelimeden ayrı yazılmaz. ‘Kelime + küçük yapıştırıcı’ diye anlatın.","▶ Görev: Tahtada Türkçe bir cümleyi parçalara bölüp Korece sıraya dizdirin."]],
+["Ek kartları","Her kartta bir ek var. Görevini Türkçe karşılığıyla düşün: <mark>konu eki, özne eki, nesne eki, yer eki</mark>.",
+[["저는 학생이에요","Ben öğrenciyim"],["비가 와요","Yağmur yağıyor"],["물을 마셔요","Su içiyorum"],["학교에 가요","Okula gidiyorum"],["저도 가요","Ben de gidiyorum"]],
+["Konu eki ‘…ise’ gibidir: konuyu açar. Özne eki ‘kim yapıyor?’ sorusunun cevabıdır. Nesne eki Türkçedeki -i hâlidir.","Yer eki, gitmek ve olmak fiilleriyle gelir (okula gitmek). Bir iş yapılan yer için başka ek vardır: restoranda yemek.","Örnek: 식당에서 먹어요 (restoranda yiyorum). Gitmek, bulunmak = ilk ek; yemek, çalışmak = ikinci ek.","▶ Görev: Her ek için bir Türkçe cümle söyletin, öğrenci ekin görevini söylesin."]],
+["Kurallar","Altın kural: <mark>kelimenin son hecesine bak. Altında ünsüz var mı?</mark> Varsa ekin ilk biçimi, yoksa ikinci biçimi.",
+[["책을","kitabı · altı dolu"],["사과를","elmayı · altı boş"],["학생은","öğrenci · altı dolu"],["엄마는","anne · altı boş"],["친구가","arkadaş · altı boş"]],
+["Türkçedeki uyuma benzetin: kitap-ı, kapı-yı. Orada da sondaki sese bakıp ek seçiyoruz.","Sadece iki kelimeyle çalışın: ‘dolu’ ve ‘boş’. Öğrenci hecenin altını parmakla kapatıp açsın.","Konu eki ile özne eki farkı: tanışırken konu eki, yeni bilgi verirken özne eki. Bu farkı ilk derste zorlamayın.","▶ Görev: 6 kelime yazın, öğrenciler altı dolu mu boş mu diye ✓ / ✗ koysun."]],
+["Eki seç","Ekran bir kelime verir. <mark>Önce altına bak</mark>: dolu mu boş mu? Sonra eki seç.",
+[["나무가","ağaç · özne · altı boş"],["물을","su · nesne · altı dolu"],["의자가","sandalye · altı boş"]],
+["Yanlış cevapta nedenini birlikte okuyun. Tahmin etmeyi engelleyin: ‘önce altına bak’ deyin.","▶ Görev: 10 soruluk tur. Doğru sayısını tahtaya yazın, ikinci turda artışı kutlayın."]]]},
+7:{g:"Kelimeleri ezberlemek değil hatırlamak: önce düşün, sonra karta bak.",
+x:["5 kelimeyi bakmadan söyle","Bir kelimeyle kısa cümle kur","Kartları bu hafta her gün 10 dk tekrar edeceğini söyle"],
+c:[["Nasıl çalışmalı","<mark>Önce hatırlamaya çalış, sonra karta bak</mark>. Kartlar 1, 3, 7 ve 14 gün sonra geri gelir. Her gün 10 dakika, haftada bir uzun çalışmadan iyidir.",
+[["엄마","anne"],["집","ev"],["물","su"]],
+["‘Biliyorum’ diye bakmak tanımadır. Cevabı kapatıp hatırlamak kalıcı öğrenmedir.","Kartlardaki ‘bildim / bilmedim’ düğmesini dürüstçe kullandırın.","▶ Görev: Öğrenciler kartlardan 5 tane çalışsın, sonra defterine bakmadan yazsın."]],
+["Yeni kelimeler","Her kelimeyi <mark>Türkçe bir benzetmeyle</mark> aklına bağla. Sesli söyle, sonra yaz.",
+[["사과","elma · sağ-va, sağ elimde elma"],["차","çay · çay gibi okunur"],["집","ev · cip ile eve"],["엄마","anne"]],
+["Bir derste 10-12 kelimeden fazla vermeyin; konu konu ilerleyin.","Benzetmeyi öğrencilere de buldurun; kendi bulduğu daha iyi kalır.","▶ Görev: Her öğrenci bir kelime için kendi benzetmesini söylesin."]],
+["Kelimelerle cümleler","Basit formül: <mark>zaman + yer + fiil</mark>. Fiil en sonda.",
+[["저는 학교에 가요","Ben okula gidiyorum"],["커피를 마셔요","Kahve içiyorum"],["엄마는 집에 있어요","Annem evde"],["내일 시장에 가요","Yarın pazara gidiyorum"]],
+["Her cümlede kelimeleri renkli kalemle ayırın: yer, ek, fiil.","Bir kelimeyi değiştirdirin: okul yerine hastane. Cümle kalıbı aynı kalıyor.","▶ Görev: Kalıbı koruyup kelime değiştirerek 3 yeni cümle yazdırın."]]]},
+8:{g:"İki sayı sistemini ayırmak ve ‘isim + sayı + sayaç’ ile saymak.",
+x:["3 şeyi sayaçla say","Saati söyle (üç buçuk)","Bir fiyat söyle (beş bin won)"],
+c:[["yol haritası","Türkçe bilenler için kolay: <mark>cümle sırası aynı</mark>, ekler sonda, sayıdan sonra çoğul eki yok (üç kitap dediğimiz gibi).",
+[["저는 사과를 먹어요","Ben elma yerim"],["가족이 네 명이에요","Ailem dört kişi"]],
+["Türkçe ‘üç kitap’ der, ‘üç kitaplar’ demez. Korece de böyle. Sayı gelince çoğul eki gerekmez.","▶ Görev: Öğrenciler kendi ailesindeki kişi sayısını söylesin."]],
+["Sayaçlar","Türkçede ‘iki <mark>fincan</mark> kahve’, ‘üç <mark>kişi</mark>’ deriz. Korecede de böyle. Kalıp: <mark>isim + sayı + sayaç</mark>.",
+[["커피 두 잔","iki fincan kahve"],["사과 세 개","üç elma"],["고양이 세 마리","üç kedi"],["책 한 권","bir kitap"],["세 시 십 분","saat 3:10"]],
+["İki sistem var. Kısa kural: yaş, saat, adet, kişi, hayvan, fincan, şişe, kitap bir sistemle; dakika, para, kat, ay, gün diğer sistemle.","Sayaçtan önce bazı sayılar kısalır: bir, iki, üç ve dört. Bunları ayrıca ezberletin.","Saatte saat kısmı bir sistemle, dakika diğeriyle söylenir; buçuk için ayrı bir kelime vardır.","▶ Görev: Sınıftaki eşyaları sayın: kalem, defter, kişi."]],
+["Sayılı cümleler","Önce Türkçeyi oku, sonra Korece parçaları bul. <mark>Para ve dakika bir sayı sistemiyle, saat ve yaş diğeriyle</mark> söylenir.",
+[["저는 스무 살이에요","Yirmi yaşındayım"],["지금 세 시예요","Şimdi saat üç"],["이거 얼마예요?","Bu ne kadar?"],["오천 원이에요","Beş bin won"]],
+["Her cümlede ‘hangi sayı sistemi?’ diye sorun. Cevap sayaçtan gelir.","▶ Görev: Mini market oyunu. Biri satıcı, biri müşteri; fiyatı Korece söylesin."]]]},
+9:{g:"Parçalardan Korece cümle kurmak ve fiili en sona koymak.",
+x:["Bir cümleyi sırala","Bir cümleyi serbest kur","Fiili göster"],
+c:[["Cümle atölyesi","<b>Sırala:</b> Türkçe cümleyi Korece parçalarla kur. <b>Serbest:</b> kendi cümleni kur. <mark>Fiil hep en sonda.</mark>",
+[["내일 시장에 가요","Yarın pazara gidiyorum"],["저는 커피를 마셔요","Ben kahve içiyorum"],["엄마는 집에 있어요","Annem evde"]],
+["Önce Sırala modu: parçaya dokununca cümleye girer, tekrar dokununca geri döner.","Serbest modda anlam çizgisini birlikte okuyun; saçma çıkan cümle bile öğretici.","▶ Görev: Takım yarışması. Hangi takım 3 doğru cümleyi önce kurar?"]]]}
+};
+var store=[];
+function ex(a,say){return a.map(function(e){return '<div class="eg"'+(say?' data-say="'+e[0]+'"':'')+'><b lang="ko">'+e[0]+'</b><span class="trk">'+PR.both(e[0]).tr+'</span><i class="rv" tabindex="0">'+e[1]+'</i></div>';}).join("");}
+function box(id,cls,h){var e=$("#"+id);if(!e){e=document.createElement("div");e.id=id;e.className=cls;(id==="gl"?$("#lsub").parentNode.insertBefore(e,$("#lesson")):$(".wrap").appendChild(e));}e.innerHTML=h;}
+function enh(){var id=CUR&&CUR.id,D=R[id];if(!D)return;
+box("gl","gl","🎯 <b>Bu dersin hedefi:</b> "+D.g);
+box("xt","xt","<b>✅ Çıkış bileti (son 5 dk)</b>"+D.x.map(function(t){return '<label><input type="checkbox">'+t+'</label>';}).join(""));
+[].slice.call(document.querySelectorAll("#lesson>.card:not([data-en])")).forEach(function(c){c.dataset.en=1;var h=c.querySelector("h2");if(!h)return;
+var m=D.c.filter(function(x){return h.textContent.indexOf(x[0])>=0;})[0];if(!m)return;
+h.classList.add("hh");var s=document.createElement("span");s.textContent=h.textContent;h.textContent="";h.appendChild(s);
+var b=document.createElement("button");b.type="button";b.className="ti";b.textContent="🎓";b.setAttribute("aria-label","Öğretmen anlatımı");b.dataset.k=store.push({t:s.textContent.replace(/^\d+\.\s*/,"").replace(/\s*·.*$/,""),e:m[2],d:m[3]})-1;h.appendChild(b);
+var d=document.createElement("div");d.className="sm";d.innerHTML='<span class="l">🌱 BASİT ANLATIM</span>'+m[1]+'<div class="egs">'+ex(m[2],1)+'</div>';h.after(d);});}
+new MutationObserver(enh).observe($("#lesson"),{childList:true});
+document.addEventListener("DOMContentLoaded",enh);
+var o=$(".opts");o.insertAdjacentHTML("beforeend",'<label class="sw"><input type="checkbox" id="swS" checked><span></span>Basit anlatım</label><label class="sw"><input type="checkbox" id="swG"><span></span>Anlamı gizle</label>');
+$("#swS").addEventListener("change",function(){document.body.classList.toggle("hs",!this.checked);});
+$("#swG").addEventListener("change",function(){document.body.classList.toggle("nr",this.checked);});
+document.addEventListener("click",function(e){var r=e.target.closest(".rv");
+if(r&&document.body.classList.contains("nr")&&!r.classList.contains("on")){e.stopImmediatePropagation();e.preventDefault();r.classList.add("on");return;}
+var b=e.target.closest(".ti");if(!b)return;e.stopImmediatePropagation();var d=store[+b.dataset.k];
+$("#popc").innerHTML='<div class="pop-head pop-head-simple"><div class="pop-title"><div class="pop-kicker">🎓 Öğretmen anlatımı</div><h3>'+d.t+'</h3></div></div><div class="pop-section"><div class="pop-section-title">ÖRNEKLER</div><div class="egs">'+ex(d.e,0)+'</div></div>'+d.d.map(function(p){var t=p.charAt(0)==="▶";return '<div class="pop-section'+(t?' tk':'')+'"><p class="pop-desc">'+p+'</p></div>';}).join("");
+$("#popc").scrollTop=0;$("#pop").classList.add("on");},true);
+})();
+</script>
+
+</body></html>
